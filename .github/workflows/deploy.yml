@@ -1,0 +1,33 @@
+name: Deploy Forky to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master # or change this to main if your primary branch is main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/actions-setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Build Web App
+        run: |
+          cd newIDE/app
+          npm install
+          npm run build:web # compiles the gdevelop web interface
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: newIDE/app/build # the output folder containing the compiled app
+          branch: gh-pages # the branch github pages will read from
